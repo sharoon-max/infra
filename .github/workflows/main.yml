@@ -20,7 +20,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}      # Your .pem private key content
           port: 22
           script: |
-            cd /path/to/your/project          # Folder on EC2 where code lives
+            cd /var/www/html         # Folder on EC2 where code lives
             git pull origin main              # Pull latest changes from Git
-            # Optional: Add build/restart commands below
-            # npm install && pm2 restart all  
+              
