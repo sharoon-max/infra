@@ -1,0 +1,25 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: SSH into EC2 and update code
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}        # Your EC2 Public IP
+          username: ${{ secrets.EC2_USERNAME }} # e.g., 'ubuntu' or 'ec2-user'
+          key: ${{ secrets.EC2_SSH_KEY }}      # Your .pem private key content
+          port: 22
+          script: |
+            cd /var/www/html         # Folder on EC2 where code lives
+            git pull origin main              # Pull latest changes from Git
+              
