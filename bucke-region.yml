@@ -1,0 +1,9 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'mybucket-${AWS::AccountId}-${AWS::Region}' # Check space after colon
+      Tags: # Line 10: Must align with BucketName
+        - Key: Region # Space after dash AND space after colon
+          Value: !Ref 'AWS::Region'

@@ -1,0 +1,9 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS CloudFormation template for an S3 bucket'
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties: 
+        BucketName:!Sub 'mybucket-${AWS::AccountId}-${AWS::Region}'
+  
+
