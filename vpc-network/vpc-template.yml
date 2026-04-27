@@ -1,6 +1,8 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'VPC Stack for Monorepo practice'
+Description: 'VPC with one Public and one Private Subnet'
+
 Resources:
+  # 1. The VPC
   MyVPC:
     Type: 'AWS::EC2::VPC'
     Properties:
@@ -9,4 +11,59 @@ Resources:
       EnableDnsHostnames: true
       Tags:
         - Key: Name
-          Value: !Sub '${AWS::StackName}-VPC'
+          Value: Practice-VPC
+
+  # 2. Internet Gateway (Required for Public Internet access)
+  MyInternetGateway:
+    Type: 'AWS::EC2::InternetGateway'
+
+  # Attach Gateway to VPC
+  VPCGatewayAttachment:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      VpcId: !Ref MyVPC
+      InternetGatewayId: !Ref MyInternetGateway
+
+  # 3. Public Subnet
+  PublicSubnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: !Select [ 0, !GetAZs "" ]
+      MapPublicIpOnLaunch: true # Automatically gives instances a public IP
+      Tags:
+        - Key: Name
+          Value: Public-Subnet
+
+  # 4. Private Subnet
+  PrivateSubnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: !Select [ 1, !GetAZs "" ]
+      MapPublicIpOnLaunch: false # Keeps instances private
+      Tags:
+        - Key: Name
+          Value: Private-Subnet
+
+  # 5. Routing for Public Subnet (Directs traffic to the Internet Gateway)
+  PublicRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref MyVPC
+
+  PublicRoute:
+    Type: 'AWS::EC2::Route'
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref MyInternetGateway
+
+  PublicSubnetAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref PublicRouteTable
