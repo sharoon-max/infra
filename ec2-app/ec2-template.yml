@@ -1,25 +1,25 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Description: 'EC2 Instance deployed into an imported VPC'
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: EC2 Instance deployed into an imported VPC
 Resources:
   MyInstanceSecurityGroup:
-    Type: 'AWS::EC2::SecurityGroup'
+    Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Allow SSH
-      VpcId: !ImportValue vpc-stack # IMPORTING FROM VPC STACK
+      VpcId: vpc-stack
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
           CidrIp: 0.0.0.0/0
-
   MyEC2Instance:
-    Type: 'AWS::EC2::Instance'
+    Type: AWS::EC2::Instance
     Properties:
       InstanceType: t2.micro
-      ImageId: ami-0440d3b780d96b29d # Ensure this AMI exists in your region
-      SubnetId: !ImportValue vpc-stack-PublicSubnetID # IMPORTING FROM VPC STACK
+      ImageId: ami-0440d3b780d96b29d
+      SubnetId: vpc-stack-PublicSubnetID
       SecurityGroupIds:
-        - !Ref MyInstanceSecurityGroup
+        - MyInstanceSecurityGroup
       Tags:
         - Key: Name
           Value: MyPracticeInstance
