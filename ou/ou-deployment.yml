@@ -2,4 +2,4 @@ template-file-path: ou/ou-template.yml
 parameters:
   NewAccountEmail: "biosyntax.pk@gmail.com"
   NewAccountName: "biosyntax-dev"
-  TargetOUId: "o-pe3c2ha4du"
+  TargetOUId: "r-kfjb"
