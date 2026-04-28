@@ -3,6 +3,3 @@ parameters:
   NewAccountEmail: "biosyntax.pk@gmail.com"
   NewAccountName: "biosyntax-dev"
   TargetOUId: "o-pe3c2ha4du"
-tags:
-  Department: "lab"
-  Environment: "dev"
